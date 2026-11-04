@@ -7,15 +7,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
+from src.features.feature_engineering import create_features
+
 
 def build_preprocessor(X):
-    """
-    Build preprocessing pipelines for numerical and categorical features.
-    """
-
-    numerical_features = X.select_dtypes(
-        include=["number"]
-    ).columns.tolist()
+    numerical_features = X.select_dtypes(include=["number"]).columns.tolist()
 
     categorical_features = X.select_dtypes(
         include=["object", "str", "category"]
@@ -42,33 +38,16 @@ def build_preprocessor(X):
 def prepare_data(
     df,
     target="G3",
-    include_period_grades=True,
+    prediction_mode="later",
     test_size=0.2,
     random_state=42
 ):
-    """
-    Split the dataset and preprocess training and testing features.
-
-    include_period_grades=True:
-        Uses G1 and G2 for later-stage performance prediction.
-
-    include_period_grades=False:
-        Excludes G1 and G2 for early performance prediction.
-    """
-
     if target not in df.columns:
         raise ValueError(f"Target column '{target}' not found.")
 
     X = df.drop(columns=[target]).copy()
     y = df[target].copy()
 
-    if not include_period_grades:
-        X = X.drop(
-            columns=["G1", "G2"],
-            errors="ignore"
-        )
-
-    # Split before fitting any preprocessing transformations
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
@@ -76,7 +55,9 @@ def prepare_data(
         random_state=random_state
     )
 
-    # Build and fit preprocessing using training data only
+    X_train = create_features(X_train, prediction_mode=prediction_mode)
+    X_test = create_features(X_test, prediction_mode=prediction_mode)
+
     preprocessor = build_preprocessor(X_train)
 
     X_train_processed = preprocessor.fit_transform(X_train)
