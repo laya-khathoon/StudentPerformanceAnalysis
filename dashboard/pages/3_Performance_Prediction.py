@@ -1,7 +1,6 @@
 ﻿from pathlib import Path
 import sys
 
-import joblib
 import pandas as pd
 import streamlit as st
 
@@ -16,7 +15,7 @@ if str(DASHBOARD_DIR) not in sys.path:
     sys.path.insert(0, str(DASHBOARD_DIR))
 
 from theme import apply_theme, render_hero
-from src.features.feature_engineering import create_features
+from src.models.prediction import predict_final_grade
 
 
 st.set_page_config(
@@ -28,7 +27,6 @@ st.set_page_config(
 apply_theme()
 
 DATA_DIR = PROJECT_ROOT / "data" / "raw" / "school"
-MODEL_DIR = PROJECT_ROOT / "models" / "school" / "regression"
 
 math_df = pd.read_csv(DATA_DIR / "student-mat.csv", sep=";")
 por_df = pd.read_csv(DATA_DIR / "student-por.csv", sep=";")
@@ -143,36 +141,14 @@ if submitted:
 
     try:
 
-        # Create a one-row dataframe.
+        # Keep the submitted values for the review expander below.
         input_df = pd.DataFrame([student_data])
 
-        # Apply the same feature engineering used during training.
-        engineered_df = create_features(
-            input_df,
-            prediction_mode=mode
-        )
-
-        # Load the saved model and matching preprocessor.
-        model_path = (
-            MODEL_DIR /
-            f"{subject.lower()}_{mode}_best_model.joblib"
-        )
-
-        preprocessor_path = (
-            MODEL_DIR /
-            f"{subject.lower()}_{mode}_preprocessor.joblib"
-        )
-
-        if not model_path.exists() or not preprocessor_path.exists():
+        try:
+            prediction = predict_final_grade(student_data, subject, mode)
+        except FileNotFoundError:
             st.error("The trained model or preprocessor file was not found.")
             st.stop()
-
-        model = joblib.load(model_path)
-        preprocessor = joblib.load(preprocessor_path)
-
-        processed_input = preprocessor.transform(engineered_df)
-
-        prediction = float(model.predict(processed_input)[0])
 
         st.divider()
         st.subheader("Prediction Result")
@@ -222,4 +198,3 @@ if submitted:
 
     except Exception as error:
         st.error(f"Prediction failed: {error}")
-
