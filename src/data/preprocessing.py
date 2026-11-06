@@ -14,7 +14,7 @@ def build_preprocessor(X):
     numerical_features = X.select_dtypes(include=["number"]).columns.tolist()
 
     categorical_features = X.select_dtypes(
-        include=["object", "str", "category"]
+        include=["object", "string", "category"]
     ).columns.tolist()
 
     numerical_pipeline = Pipeline([
