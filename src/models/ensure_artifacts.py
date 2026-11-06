@@ -78,3 +78,9 @@ def ensure_artifacts():
         _download_data()
     if _models_missing():
         _train_models()
+
+
+def ensure_data():
+    """Download the dataset if it is missing."""
+    if _data_missing():
+        _download_data()
