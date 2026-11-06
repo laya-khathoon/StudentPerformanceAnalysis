@@ -7,6 +7,16 @@ DASHBOARD_DIR = Path(__file__).resolve().parent
 if str(DASHBOARD_DIR) not in sys.path:
     sys.path.insert(0, str(DASHBOARD_DIR))
 
+PROJECT_ROOT = DASHBOARD_DIR.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+# Fresh deployments (e.g. Streamlit Cloud) do not include the dataset;
+# download it once at startup so every page can read it.
+from src.models.ensure_artifacts import ensure_data
+
+ensure_data()
+
 st.set_page_config(
     page_title="Student Performance Explorer",
     page_icon="🎓",
