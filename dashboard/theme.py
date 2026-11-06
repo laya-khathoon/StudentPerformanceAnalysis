@@ -80,6 +80,27 @@ def to_css():
         color: #A3ADB8 !important;
     }
 
+    /* Alert boxes (st.info / warning / success / error) keep Streamlit's
+       light pastel backgrounds, so force dark text and icons inside them;
+       the app-wide light text color is unreadable on those backgrounds. */
+    [data-testid="stAlert"],
+    [data-testid="stAlert"] p,
+    [data-testid="stAlert"] span,
+    [data-testid="stAlert"] div,
+    [data-testid="stAlert"] li,
+    [data-testid="stAlert"] a,
+    [data-testid="stNotification"],
+    [data-testid="stNotification"] p,
+    [data-testid="stNotification"] span,
+    [data-testid="stNotification"] div {
+        color: #262730 !important;
+    }
+
+    [data-testid="stAlert"] svg,
+    [data-testid="stNotification"] svg {
+        fill: #262730 !important;
+    }
+
     .colbo-hero {
         padding: 3.5rem;
         margin-bottom: 2.5rem;
