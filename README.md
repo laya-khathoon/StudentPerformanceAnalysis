@@ -1,1 +1,111 @@
-# Student Performance Analysis\n\n\nMachine learning on the UCI Student Performance dataset (two Portuguese\nschools). The project predicts a student's final grade (G3, 0-20) and\nflags students at risk of failing (G3 below 10), for both Mathematics\nand Portuguese.\n\n**Live demo:** [Open the Student Performance Analysis app](https://laya-student-performance.streamlit.app/)\n\nEach task runs in two modes:\n\n- **early** - uses only background and behavior data (no exam grades yet)\n- **later** - uses period grades G1 and G2 as well\n\nFour algorithms are compared for every task: Linear/Logistic Regression,\nDecision Tree, Random Forest and XGBoost. The best models are saved and\nexplored in a Streamlit dashboard with SHAP explanations.\n\nThe dashboard makes predictions through the shared prediction module\n():\n\n-  - regression estimate of the final grade\n-  - classification at-risk flag and probability\n\nThe Performance Prediction page derives its pass/fail message from the\nregression estimate, while the Risk Analysis page uses the dedicated\nclassification model's at-risk probability directly.\n\n## Results\n\nBest model per task, on held-out test data (see  for all four\nmodels per task):\n\n| Task | Best model | R2 | RMSE (out of 20) |\n|---|---|---:|---:|\n| Math grade, later | Random Forest | 0.83 | 1.89 |\n| Portuguese grade, later | Linear Regression | 0.85 | 1.21 |\n| Math grade, early | Random Forest | 0.31 | 3.78 |\n| Portuguese grade, early | XGBoost | 0.17 | 2.84 |\n\n| Risk flag (G3 < 10) | Best model | F1 | ROC-AUC |\n|---|---|---:|---:|\n| Mathematics, later | Logistic Regression | 0.89 | 0.98 |\n| Portuguese, later | Logistic Regression | 0.69 | 0.96 |\n\nThe pattern in these numbers is itself a finding: past grades predict\nfinal grades strongly, while background information alone is a much\nweaker predictor in both subjects.\n\n## Data\n\nDownload the Student Performance dataset from the UCI Machine Learning\nRepository:\n\nhttps://archive.ics.uci.edu/dataset/320/student+performance\n\nPlace the two CSV files here (this folder is git-ignored):\n\n
+# Student Performance Analysis 
+
+**Live demo:** [Open the Student Performance Analysis app](https://laya-student-performance.streamlit.app/)
+
+Machine learning on the UCI Student Performance dataset (two Portuguese 
+schools). The project predicts a student's final grade (G3, 0-20) and 
+flags students at risk of failing (G3 below 10), for both Mathematics 
+and Portuguese. 
+
+Each task runs in two modes: 
+
+- **early** - uses only background and behavior data (no exam grades yet) 
+- **later** - uses period grades G1 and G2 as well 
+
+Four algorithms are compared for every task: Linear/Logistic Regression, 
+Decision Tree, Random Forest and XGBoost. The best models are saved and 
+explored in a Streamlit dashboard with SHAP explanations. 
+
+The dashboard makes predictions through the shared prediction module 
+(`src/models/prediction.py`): 
+
+- `predict_final_grade` - regression estimate of the final grade 
+- `predict_at_risk` - classification at-risk flag and probability 
+
+The Performance Prediction page derives its pass/fail message from the 
+regression estimate, while the Risk Analysis page uses the dedicated 
+classification model's at-risk probability directly. 
+
+## Results 
+
+Best model per task, on held-out test data (see `reports/` for all four 
+models per task): 
+
+| Task | Best model | R2 | RMSE (out of 20) | 
+|---|---|---|---| 
+| Math grade, later | Random Forest | 0.83 | 1.89 | 
+| Portuguese grade, later | Linear Regression | 0.85 | 1.21 | 
+| Math grade, early | Random Forest | 0.31 | 3.78 | 
+| Portuguese grade, early | XGBoost | 0.17 | 2.84 | 
+
+| Risk flag (G3 < 10) | Best model | F1 | ROC-AUC | 
+|---|---|---|---| 
+| Mathematics, later | Logistic Regression | 0.89 | 0.98 | 
+| Portuguese, later | Logistic Regression | 0.69 | 0.96 | 
+
+The pattern in these numbers is itself a finding: past grades predict 
+final grades strongly, while background information alone is a much 
+weaker predictor in both subjects. 
+
+## Data 
+
+Download the Student Performance dataset from the UCI Machine Learning 
+Repository: 
+
+https://archive.ics.uci.edu/dataset/320/student+performance 
+
+Place the two CSV files here (this folder is git-ignored): 
+
+```
+data/raw/school/student-mat.csv
+data/raw/school/student-por.csv
+```
+ 
+## Setup 
+
+Python 3.11 or newer recommended. 
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
+pip install -r requirements.txt
+```
+ 
+## Run order 
+
+```bash
+# 1. Download the data (above)
+
+# 2. Train and evaluate all models (writes reports/*.csv and saves models)
+python -m src.models.train_regression
+python -m src.models.train_classification
+
+# 3. Generate the evaluation charts (writes reports/figures/)
+python -m src.models.generate_evaluation
+
+# 4. Open the dashboard
+streamlit run dashboard/app.py
+
+# 5. Run the tests (44 tests)
+pytest
+```
+ 
+## Project structure 
+
+```
+src/
+  data/           dataset loading and preprocessing
+  features/       feature engineering (early / later modes)
+  models/         training, evaluation and the shared prediction module
+  explainability/ SHAP analysis
+dashboard/        Streamlit app (6 pages)
+tests/            pytest suite
+reports/          metrics CSVs and figures
+```
+ 
+## A note on responsible use 
+
+The early mode leans on sensitive background attributes (family 
+situation, parents' education, alcohol use) to label students "at risk". 
+This is a learning project on a public research dataset. Its predictions 
+must never be used to judge or make decisions about real students. 
