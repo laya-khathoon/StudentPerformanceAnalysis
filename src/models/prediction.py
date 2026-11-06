@@ -48,6 +48,13 @@ def _load_model_and_preprocessor(model_directory, subject, mode):
         f"{subject.lower()}_{mode}_preprocessor.joblib"
     )
 
+    if not model_path.exists() or not preprocessor_path.exists():
+        # Fresh deployment (e.g. Streamlit Cloud): the repo does not
+        # store the dataset or trained models, so build them once here.
+        from src.models.ensure_artifacts import ensure_artifacts
+
+        ensure_artifacts()
+
     if not model_path.exists():
         raise FileNotFoundError(
             f"Trained model not found: {model_path}"
