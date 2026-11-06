@@ -14,6 +14,16 @@ Four algorithms are compared for every task: Linear/Logistic Regression,
 Decision Tree, Random Forest and XGBoost. The best models are saved and
 explored in a Streamlit dashboard with SHAP explanations.
 
+The dashboard makes predictions through the shared prediction module
+(`src/models/prediction.py`):
+
+- `predict_final_grade` - regression estimate of the final grade
+- `predict_at_risk` - classification at-risk flag and probability
+
+The Performance Prediction page derives its pass/fail message from the
+regression estimate, while the Risk Analysis page uses the dedicated
+classification model's at-risk probability directly.
+
 ## Results
 
 Best model per task, on held-out test data (see `reports/` for all four
@@ -74,7 +84,7 @@ python -m src.models.generate_evaluation
 # 4. Open the dashboard
 streamlit run dashboard/app.py
 
-# 5. Run the tests (27 tests)
+# 5. Run the tests (44 tests)
 pytest
 ```
 
@@ -84,7 +94,7 @@ pytest
 src/
   data/           dataset loading and preprocessing
   features/       feature engineering (early / later modes)
-  models/         training, evaluation, prediction
+  models/         training, evaluation and the shared prediction module
   explainability/ SHAP analysis
 dashboard/        Streamlit app (6 pages)
 tests/            pytest suite
