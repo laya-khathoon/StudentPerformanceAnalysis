@@ -100,7 +100,7 @@ if not reg_subset.empty:
         reg_subset[
             ["Model", "MAE", "MSE", "RMSE", "R2 Score"]
         ].sort_values("RMSE"),
-        use_container_width=True,
+        width='stretch',
         hide_index=True
     )
 
@@ -153,7 +153,7 @@ if not cls_subset.empty:
                 "Recall", "F1 Score", "ROC-AUC"
             ]
         ],
-        use_container_width=True,
+        width='stretch',
         hide_index=True
     )
 
@@ -217,7 +217,7 @@ for index in range(0, len(figure_groups), 2):
             if image_path.exists():
                 st.image(
                     str(image_path),
-                    use_container_width=True
+                    width='stretch'
                 )
             else:
                 st.warning(f"Missing figure: {filename}")
@@ -261,7 +261,7 @@ for column, (title, filename) in zip(
         if image_path.exists():
             st.image(
                 str(image_path),
-                use_container_width=True
+                width='stretch'
             )
         else:
             st.warning(f"Missing SHAP figure: {filename}")
