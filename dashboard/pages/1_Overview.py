@@ -89,7 +89,7 @@ fig.update_layout(
     margin=dict(l=20, r=20, t=60, b=20)
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width='stretch')
 
 st.divider()
 
@@ -99,7 +99,7 @@ st.caption(f"Showing the first 10 records from the {subject} dataset.")
 
 st.dataframe(
     selected_df.head(10),
-    use_container_width=True,
+    width='stretch',
     hide_index=True
 )
 
