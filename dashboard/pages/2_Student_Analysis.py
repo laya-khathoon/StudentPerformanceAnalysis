@@ -132,7 +132,7 @@ try:
         )
 
         fig.update_layout(coloraxis_showscale=False)
-        st.plotly_chart(style_chart(fig), use_container_width=True)
+        st.plotly_chart(style_chart(fig), width='stretch')
 
     with right:
         fig = px.box(
@@ -147,7 +147,7 @@ try:
             color_discrete_sequence=["#7FA88A"]
         )
 
-        st.plotly_chart(style_chart(fig), use_container_width=True)
+        st.plotly_chart(style_chart(fig), width='stretch')
 
     st.divider()
     st.subheader("Student Characteristics")
@@ -164,7 +164,7 @@ try:
             color_discrete_sequence=["#7FA88A", "#8A8F96"]
         )
 
-        st.plotly_chart(style_chart(fig), use_container_width=True)
+        st.plotly_chart(style_chart(fig), width='stretch')
 
     with right:
         failure_data = (
@@ -184,7 +184,7 @@ try:
             color_discrete_sequence=["#7FA88A"]
         )
 
-        st.plotly_chart(style_chart(fig), use_container_width=True)
+        st.plotly_chart(style_chart(fig), width='stretch')
 
     st.divider()
     st.subheader("Attendance Analysis")
@@ -204,7 +204,7 @@ try:
         color_continuous_scale=["#8A8F96", "#7FA88A"]
     )
 
-    st.plotly_chart(style_chart(fig), use_container_width=True)
+    st.plotly_chart(style_chart(fig), width='stretch')
 
     st.divider()
     st.subheader("Student Records")
@@ -219,7 +219,7 @@ try:
 
     st.dataframe(
         display_df.reset_index(drop=True),
-        use_container_width=True,
+        width='stretch',
         hide_index=True
     )
 
