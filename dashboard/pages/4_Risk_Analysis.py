@@ -128,7 +128,7 @@ with st.form("risk_assessment_form"):
 
     submitted = st.form_submit_button(
         "Assess Academic Risk",
-        use_container_width=True
+        width='stretch'
     )
 
 
@@ -184,7 +184,7 @@ if submitted:
         )
 
         with st.expander("View submitted student information"):
-            st.dataframe(input_df, use_container_width=True)
+            st.dataframe(input_df, width='stretch')
 
     except Exception as error:
         st.error(f"Risk assessment failed: {error}")
