@@ -133,7 +133,7 @@ with st.form("student_prediction_form"):
 
     submitted = st.form_submit_button(
         "Predict Final Grade",
-        use_container_width=True
+        width='stretch'
     )
 
 
@@ -194,7 +194,7 @@ if submitted:
         )
 
         with st.expander("View submitted student information"):
-            st.dataframe(input_df, use_container_width=True)
+            st.dataframe(input_df, width='stretch')
 
     except Exception as error:
         st.error(f"Prediction failed: {error}")
