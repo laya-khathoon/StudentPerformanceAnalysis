@@ -38,6 +38,19 @@ models per task):
 | Math grade, early | Random Forest | 0.31 | 3.78 | 
 | Portuguese grade, early | XGBoost | 0.17 | 2.84 | 
 
+At-risk flag (G3 below 10), best model per task by F1 on held-out test data: 
+
+| Task | Best model | Accuracy | Precision | Recall | F1 | ROC-AUC | 
+|---|---|---|---|---|---|---| 
+| Math at-risk, later | Logistic Regression | 0.924 | 0.862 | 0.926 | 0.893 | 0.976 | 
+| Portuguese at-risk, later | Logistic Regression | 0.923 | 0.647 | 0.733 | 0.688 | 0.959 | 
+| Math at-risk, early | XGBoost | 0.722 | 0.619 | 0.481 | 0.542 | 0.714 | 
+| Portuguese at-risk, early | Decision Tree | 0.838 | 0.385 | 0.667 | 0.488 | 0.749 | 
+
+Early tasks catch barely half of at-risk students (recall around 0.5-0.67), 
+which is expected before any exam grades exist; the later tasks are the 
+reliable ones. Full per-model numbers are in `reports/classification_results.csv`. 
+
 | Risk flag (G3 < 10) | Best model | F1 | ROC-AUC | 
 |---|---|---|---| 
 | Mathematics, later | Logistic Regression | 0.89 | 0.98 | 
